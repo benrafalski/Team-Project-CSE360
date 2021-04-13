@@ -10,6 +10,9 @@ public class VaccineLocation {
 	public void incrementCount() {
 		this.count++;
 	}
+	public void decrementCount() {
+		this.count--;
+	}
 	public String getLocation() {
 		return this.location;
 	}
