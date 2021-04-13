@@ -10,6 +10,9 @@ public class VaccineType {
 	public void incrementCount() {
 		this.count++;
 	}
+	public void decrementCount() {
+		this.count--;
+	}
 	public String getType() {
 		return this.type;
 	}
