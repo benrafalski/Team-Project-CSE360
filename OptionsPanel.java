@@ -169,7 +169,7 @@ public class OptionsPanel extends JPanel implements ActionListener {
 		infoAddedLabel  = new JLabel();
 		infoAddedLabel.setText("");
 		infoAddedLabel.setForeground(new Color(0x1BF200));
-		infoAddedLabel.setBounds(290, 350, 250, 50);
+		infoAddedLabel.setBounds(290, 350, 300, 50);
 		//text fields for add function
 		addDate = new JTextField();
 		addDate.setBounds(250, 90, 200, 30);
