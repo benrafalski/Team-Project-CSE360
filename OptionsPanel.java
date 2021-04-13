@@ -169,7 +169,7 @@ public class OptionsPanel extends JPanel implements ActionListener {
 		infoAddedLabel  = new JLabel();
 		infoAddedLabel.setText("");
 		infoAddedLabel.setForeground(new Color(0x1BF200));
-		infoAddedLabel.setBounds(290, 350, 200, 50);
+		infoAddedLabel.setBounds(290, 350, 250, 50);
 		//text fields for add function
 		addDate = new JTextField();
 		addDate.setBounds(250, 90, 200, 30);
@@ -477,7 +477,51 @@ public class OptionsPanel extends JPanel implements ActionListener {
 				int repeat = 0;
 				for(int i = 0; i < vaccines.size(); i++) {
 					if(vaccines.get(i).getID().compareTo(addID.getText()) == 0){
-						infoAddedLabel.setText("ID: " + addID.getText() +  " is Already in the Table!");
+						String oldLocation = (String)table.getModel().getValueAt(i, 5);
+						String oldType = (String)table.getModel().getValueAt(i, 3) ;
+						table.getModel().setValueAt(addID.getText(), i, 0);
+						table.getModel().setValueAt(addLast.getText(), i, 1);
+						table.getModel().setValueAt(addFirst.getText(), i, 2);
+						table.getModel().setValueAt(addType.getText(), i, 3);
+						table.getModel().setValueAt(addDate.getText(), i, 4);
+						table.getModel().setValueAt(addLocation.getText(), i, 5);
+						vaccines.get(i).setID(addID.getText());
+						vaccines.get(i).setLast(addLast.getText());
+						vaccines.get(i).setFirst(addFirst.getText());
+						vaccines.get(i).setType(addType.getText());
+						vaccines.get(i).setDate(addDate.getText());
+						vaccines.get(i).setLocation(addLocation.getText());
+						int typeRepeat = 0;
+						for(int q = 0; q < types.size(); q++) {
+							if(types.get(q).getType().compareTo(addType.getText()) == 0) {
+								types.get(q).incrementCount();
+								typeRepeat = 1;
+							}
+							if(types.get(q).getType().compareTo(oldType) == 0) {
+								types.get(q).decrementCount();
+							}
+						}
+						if(typeRepeat == 0) {
+							VaccineType newType = new VaccineType(addType.getText());
+							newType.incrementCount();
+							types.add(newType);
+						}
+						int locRepeat = 0;
+						for(int q = 0; q < locations.size(); q++) {
+							if(locations.get(q).getLocation().compareTo(addLocation.getText()) == 0) {
+								locations.get(q).incrementCount();
+								locRepeat = 1;
+							}
+							if(locations.get(q).getLocation().compareTo(oldLocation) == 0) {
+								locations.get(q).decrementCount();
+							}
+						}
+						if(locRepeat == 0) {
+							VaccineLocation newLoc = new VaccineLocation(addLocation.getText());
+							newLoc.incrementCount();
+							locations.add(newLoc);
+						}
+						infoAddedLabel.setText("ID: " + addID.getText() +  " is Already in the Table! Info Overridden");
 						repeat = 1;
 					}
 				}
@@ -493,9 +537,9 @@ public class OptionsPanel extends JPanel implements ActionListener {
 					model.addRow(rows);
 					infoAddedLabel.setText("Information Added to Table!");
 					int typeRepeat = 0;
-					for(int i = 0; i < types.size(); i++) {
-						if(types.get(i).getType().compareTo(addType.getText()) == 0) {
-							types.get(i).incrementCount();
+					for(int f = 0; f < types.size(); f++) {
+						if(types.get(f).getType().compareTo(addType.getText()) == 0) {
+							types.get(f).incrementCount();
 							typeRepeat = 1;
 						}
 					}
@@ -505,9 +549,9 @@ public class OptionsPanel extends JPanel implements ActionListener {
 						types.add(newType);
 					}
 					int locRepeat = 0;
-					for(int i = 0; i < locations.size(); i++) {
-						if(locations.get(i).getLocation().compareTo(addLocation.getText()) == 0) {
-							locations.get(i).incrementCount();
+					for(int f = 0; f < locations.size(); f++) {
+						if(locations.get(f).getLocation().compareTo(addLocation.getText()) == 0) {
+							locations.get(f).incrementCount();
 							locRepeat = 1;
 						}
 					}
