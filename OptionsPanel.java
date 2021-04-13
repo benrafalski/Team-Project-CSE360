@@ -21,6 +21,16 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
+
 import javafx.scene.text.Font;
 
 public class OptionsPanel extends JPanel implements ActionListener {
@@ -35,6 +45,8 @@ public class OptionsPanel extends JPanel implements ActionListener {
 	JButton addInfoButton;
 	JButton loadFileButton;
 	JButton saveFileButton;
+	JButton barChartButton;
+	JButton pieChartButton;
 	
 	//labels
 	JLabel teamMembersLabel;
@@ -46,6 +58,7 @@ public class OptionsPanel extends JPanel implements ActionListener {
 	JLabel infoAddedLabel;
 	JLabel saveinstLabel;
 	JLabel savedLabel;
+	JLabel viewInstLabel;
 	
 	//table
 	JTable table;
@@ -63,8 +76,19 @@ public class OptionsPanel extends JPanel implements ActionListener {
 	
 	//ArrayList
 	ArrayList<Vaccine> vaccines = new ArrayList<Vaccine>();
+	ArrayList<VaccineType> types = new ArrayList<VaccineType>();
+	ArrayList<VaccineLocation> locations = new ArrayList<VaccineLocation>();
 	
-	
+	//bar chart and pie chart
+	JFreeChart jchart;
+	ChartFrame chartfrm;
+	ChartPanel chartPanel;
+	DefaultCategoryDataset dcd;
+	CategoryPlot plot;
+	DefaultPieDataset dpd;
+	JFreeChart piechart;
+	PiePlot3D pieplot;
+	ChartPanel piePanel;
 	
 	OptionsPanel(){
 		
@@ -144,7 +168,7 @@ public class OptionsPanel extends JPanel implements ActionListener {
 		addLabel.setBounds(150, 50, 300, 300);
 		infoAddedLabel  = new JLabel();
 		infoAddedLabel.setText("");
-		infoAddedLabel.setForeground(Color.RED);
+		infoAddedLabel.setForeground(new Color(0x1BF200));
 		infoAddedLabel.setBounds(290, 350, 200, 50);
 		//text fields for add function
 		addDate = new JTextField();
@@ -180,12 +204,12 @@ public class OptionsPanel extends JPanel implements ActionListener {
 		//loaded label
 		loadedLabel  = new JLabel();
 		loadedLabel.setText("File Loaded!");
-		loadedLabel.setForeground(Color.RED);
+		loadedLabel.setForeground(new Color(0x1BF200));
 		loadedLabel.setBounds(372, 290, 100, 50);
 		//loaded error label
 		loadErrorLabel  = new JLabel();
 		loadErrorLabel.setText("File Was Not Loaded!");
-		loadErrorLabel.setForeground(Color.RED);
+		loadErrorLabel.setForeground(new Color(0x1BF200));
 		loadErrorLabel.setBounds(372, 290, 100, 50);
 		
 		//save stuff
@@ -202,8 +226,37 @@ public class OptionsPanel extends JPanel implements ActionListener {
 		//saved label
 		savedLabel  = new JLabel();
 		savedLabel.setText("");
-		savedLabel.setForeground(Color.RED);
+		savedLabel.setForeground(new Color(0x1BF200));
 		savedLabel.setBounds(310, 290, 400, 50);
+		
+		//view stuff
+		viewInstLabel  = new JLabel();
+		viewInstLabel.setText("");
+		viewInstLabel.setForeground(new Color(0x1BF200));
+		viewInstLabel.setBounds(250, 0, 400, 30);
+		barChartButton = new JButton();
+		barChartButton.setBounds(245, 360, 150, 30);
+		barChartButton.addActionListener(this);
+		barChartButton.setText("Show Bar Chart");
+		barChartButton.setFocusable(false);
+		pieChartButton = new JButton();
+		pieChartButton.setBounds(405, 360, 150, 30);
+		pieChartButton.addActionListener(this);
+		pieChartButton.setText("Show Pie Chart");
+		pieChartButton.setFocusable(false);
+		//bar chart
+		dcd = new DefaultCategoryDataset();
+		jchart = ChartFactory.createBarChart("Number of Vaccines of Each Type", "Vaccine Type", "Number of Vaccines", dcd);
+		plot = jchart.getCategoryPlot();
+		plot.setRangeGridlinePaint(Color.black);
+		chartPanel = new ChartPanel(jchart);
+		chartPanel.setBounds(100, 30, 590, 320);
+		//pie chart
+		dpd = new DefaultPieDataset();
+		piechart = ChartFactory.createPieChart3D("Number of Vaccinations per Location", dpd, true, true, true);
+		pieplot = (PiePlot3D)piechart.getPlot(); 
+		piePanel = new ChartPanel(piechart);
+		piePanel.setBounds(100, 30, 590, 320);
 		
 		//main panel settings
 		this.setBackground(new Color(123,50,250));
@@ -243,6 +296,11 @@ public class OptionsPanel extends JPanel implements ActionListener {
 			this.remove(saveFileButton);
 			this.remove(saveinstLabel);
 			this.remove(savedLabel);
+			this.remove(chartPanel);
+			this.remove(barChartButton);
+			this.remove(pieChartButton);
+			this.remove(piePanel);
+			this.remove(viewInstLabel);
 			this.add(teamMembersLabel);
 			this.repaint();
 		}else if(e.getSource() == loadButton) {
@@ -263,6 +321,11 @@ public class OptionsPanel extends JPanel implements ActionListener {
 			this.remove(saveinstLabel);
 			this.remove(saveFileButton);
 			this.remove(savedLabel);
+			this.remove(chartPanel);
+			this.remove(barChartButton);
+			this.remove(pieChartButton);
+			this.remove(piePanel);
+			this.remove(viewInstLabel);
 			this.add(loadFileButton);
 			this.add(loadinstLabel);
 			this.repaint();
@@ -278,6 +341,11 @@ public class OptionsPanel extends JPanel implements ActionListener {
 			this.remove(saveFileButton);
 			this.remove(saveinstLabel);
 			this.remove(savedLabel);
+			this.remove(chartPanel);
+			this.remove(barChartButton);
+			this.remove(pieChartButton);
+			this.remove(piePanel);
+			this.remove(viewInstLabel);
 			this.add(addLabel);
 			this.add(addDate);
 			this.add(addID);
@@ -304,12 +372,18 @@ public class OptionsPanel extends JPanel implements ActionListener {
 			this.remove(loadinstLabel);
 			this.remove(loadErrorLabel);
 			this.remove(infoAddedLabel);
+			this.remove(chartPanel);
+			this.remove(barChartButton);
+			this.remove(pieChartButton);
+			this.remove(piePanel);
+			this.remove(viewInstLabel);
 			this.add(saveFileButton);
 			this.add(saveinstLabel);
 			this.add(savedLabel);
 			savedLabel.setText("");
 			this.repaint();
 		}else if(e.getSource() == viewButton) {
+			// show table and pie chart
 			this.remove(addLabel);
 			this.remove(pane);
 			this.remove(teamMembersLabel);
@@ -329,6 +403,18 @@ public class OptionsPanel extends JPanel implements ActionListener {
 			this.remove(saveFileButton);
 			this.remove(saveinstLabel);
 			this.remove(savedLabel);
+			this.remove(piePanel);
+			this.remove(chartPanel);
+			this.add(barChartButton);
+			this.add(pieChartButton);
+			viewInstLabel.setText("");
+			this.add(viewInstLabel);
+			for(int i = 0; i < types.size(); i++) {
+				dcd.setValue(types.get(i).getCount(),types.get(i).getType() , "");
+			}
+			for(int i = 0; i < locations.size(); i++) {
+				dpd.setValue(locations.get(i).getLocation() ,new Integer(locations.get(i).getCount()));
+			}
 			this.repaint();
 		}else if(e.getSource() == addInfoButton) {
 			//adds new info to table
@@ -388,22 +474,55 @@ public class OptionsPanel extends JPanel implements ActionListener {
 				infoAddedLabel.setText("Information Not Added to Table!");
 				this.repaint();
 			}else {
-				rows[0] = addID.getText();
-				rows[1] = addLast.getText();
-				rows[2] = addFirst.getText();
-				rows[3] = addType.getText();
-				rows[4] = addDate.getText();
-				rows[5] = addLocation.getText();
-				Vaccine addedVaccine = new Vaccine(addID.getText(),addLast.getText(),addFirst.getText(),addType.getText(),addDate.getText(),addLocation.getText());
-				vaccines.add(addedVaccine);
-				model.addRow(rows);
+				int repeat = 0;
+				for(int i = 0; i < vaccines.size(); i++) {
+					if(vaccines.get(i).getID().compareTo(addID.getText()) == 0){
+						infoAddedLabel.setText("ID: " + addID.getText() +  " is Already in the Table!");
+						repeat = 1;
+					}
+				}
+				if(repeat == 0) {
+					rows[0] = addID.getText();
+					rows[1] = addLast.getText();
+					rows[2] = addFirst.getText();
+					rows[3] = addType.getText();
+					rows[4] = addDate.getText();
+					rows[5] = addLocation.getText();
+					Vaccine addedVaccine = new Vaccine(addID.getText(),addLast.getText(),addFirst.getText(),addType.getText(),addDate.getText(),addLocation.getText());
+					vaccines.add(addedVaccine);
+					model.addRow(rows);
+					infoAddedLabel.setText("Information Added to Table!");
+					int typeRepeat = 0;
+					for(int i = 0; i < types.size(); i++) {
+						if(types.get(i).getType().compareTo(addType.getText()) == 0) {
+							types.get(i).incrementCount();
+							typeRepeat = 1;
+						}
+					}
+					if(typeRepeat == 0) {
+						VaccineType newType = new VaccineType(addType.getText());
+						newType.incrementCount();
+						types.add(newType);
+					}
+					int locRepeat = 0;
+					for(int i = 0; i < locations.size(); i++) {
+						if(locations.get(i).getLocation().compareTo(addLocation.getText()) == 0) {
+							locations.get(i).incrementCount();
+							locRepeat = 1;
+						}
+					}
+					if(locRepeat == 0) {
+						VaccineLocation newLoc = new VaccineLocation(addLocation.getText());
+						newLoc.incrementCount();
+						locations.add(newLoc);
+					}
+				}
 				addID.setText("");
 				addLast.setText("");
 				addFirst.setText("");
 				addType.setText("");
 				addDate.setText("");
 				addLocation.setText("");
-				infoAddedLabel.setText("Information Added to Table!");
 				this.repaint();
 			}
 		}else if(e.getSource() == loadFileButton) {
@@ -420,22 +539,54 @@ public class OptionsPanel extends JPanel implements ActionListener {
 					this.repaint();
 					String line = "";
 					int i = 0;
-					model.setRowCount(0);
+					//model.setRowCount(0); // clears table
 					try {
 						//adds data to the table
 						BufferedReader br = new BufferedReader(new FileReader(fileChooser.getSelectedFile().getAbsolutePath()));
 						while((line = br.readLine()) != null) {
 							if(i == 1) {
+								int repeat = 0;
 								String[] values = line.split(",");
-								rows[0] = values[0];
-								rows[1] = values[1];
-								rows[2] = values[2];
-								rows[3] = values[3];
-								rows[4] = values[4];
-								rows[5] = values[5];
-								Vaccine loadedVaccine = new Vaccine(values[0],values[1],values[2],values[3],values[4],values[5]);
-								vaccines.add(loadedVaccine);
-								model.addRow(rows);
+								for(int j = 0; j < vaccines.size(); j++) {
+									if(vaccines.get(j).getID().compareTo(values[0]) == 0){
+										repeat = 1;
+									}
+								}
+								if(repeat == 0) {
+									rows[0] = values[0];
+									rows[1] = values[1];
+									rows[2] = values[2];
+									rows[3] = values[3];
+									rows[4] = values[4];
+									rows[5] = values[5];
+									Vaccine loadedVaccine = new Vaccine(values[0],values[1],values[2],values[3],values[4],values[5]);
+									vaccines.add(loadedVaccine);
+									model.addRow(rows);
+									int typeRepeat = 0;
+									for(int h = 0; h < types.size(); h++) {
+										if(types.get(h).getType().compareTo(values[3]) == 0) {
+											types.get(h).incrementCount();
+											typeRepeat = 1;
+										}
+									}
+									if(typeRepeat == 0) {
+										VaccineType newType = new VaccineType(values[3]);
+										newType.incrementCount();
+										types.add(newType);
+									}
+									int locRepeat = 0;
+									for(int h = 0; h < locations.size(); h++) {
+										if(locations.get(h).getLocation().compareTo(values[5]) == 0) {
+											locations.get(h).incrementCount();
+											locRepeat = 1;
+										}
+									}
+									if(locRepeat == 0) {
+										VaccineLocation newLoc = new VaccineLocation(values[5]);
+										newLoc.incrementCount();
+										locations.add(newLoc);
+									}
+								}
 							}else {
 								i = 1;
 							}
@@ -477,6 +628,16 @@ public class OptionsPanel extends JPanel implements ActionListener {
 					this.repaint();
 				}
 			}
+		}else if(e.getSource() == barChartButton) {
+			this.remove(piePanel);
+			viewInstLabel.setText("Hover over bars with mouse for more information!");
+			this.add(chartPanel);
+			this.repaint();
+		}else if(e.getSource() == pieChartButton) {
+			this.remove(chartPanel);
+			viewInstLabel.setText("Hover over pie slices with mouse for more information!");
+			this.add(piePanel);
+			this.repaint();
 		}else {
 			//show table
 			this.remove(addLabel);
@@ -499,6 +660,11 @@ public class OptionsPanel extends JPanel implements ActionListener {
 			this.remove(saveFileButton);
 			this.remove(saveinstLabel);
 			this.remove(savedLabel);
+			this.remove(chartPanel);
+			this.remove(barChartButton);
+			this.remove(pieChartButton);
+			this.remove(piePanel);
+			this.remove(viewInstLabel);
 			this.add(pane);
 			this.repaint();
 		}
