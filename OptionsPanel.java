@@ -271,7 +271,6 @@ public class OptionsPanel extends JPanel implements ActionListener {
 		this.add(optionsLabel);
 		this.add(pane);
 		this.repaint();
-		
 	}
 	
 	// does something on the action of a button push
@@ -712,7 +711,5 @@ public class OptionsPanel extends JPanel implements ActionListener {
 			this.add(pane);
 			this.repaint();
 		}
-		
-		
 	}
 }
