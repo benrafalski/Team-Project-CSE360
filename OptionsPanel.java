@@ -31,7 +31,6 @@ import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
-import javafx.scene.text.Font;
 
 public class OptionsPanel extends JPanel implements ActionListener {
 	
@@ -166,6 +165,7 @@ public class OptionsPanel extends JPanel implements ActionListener {
 		addLabel.setFont(teamMembersLabel.getFont().deriveFont(30.0f));
 		addLabel.setForeground(Color.WHITE);
 		addLabel.setBounds(150, 50, 300, 300);
+		//information has been added label
 		infoAddedLabel  = new JLabel();
 		infoAddedLabel.setText("");
 		infoAddedLabel.setForeground(new Color(0x1BF200));
@@ -234,11 +234,13 @@ public class OptionsPanel extends JPanel implements ActionListener {
 		viewInstLabel.setText("");
 		viewInstLabel.setForeground(new Color(0x1BF200));
 		viewInstLabel.setBounds(250, 0, 400, 30);
+		//bar chart button
 		barChartButton = new JButton();
 		barChartButton.setBounds(245, 360, 150, 30);
 		barChartButton.addActionListener(this);
 		barChartButton.setText("Show Bar Chart");
 		barChartButton.setFocusable(false);
+		//pie chart button
 		pieChartButton = new JButton();
 		pieChartButton.setBounds(405, 360, 150, 30);
 		pieChartButton.addActionListener(this);
@@ -277,6 +279,8 @@ public class OptionsPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == aboutButton) {
 			//displays teamMembersLabel information
+			
+			//remove old components
 			this.remove(addLabel);
 			this.remove(pane);
 			this.remove(addLabel);
@@ -300,9 +304,13 @@ public class OptionsPanel extends JPanel implements ActionListener {
 			this.remove(pieChartButton);
 			this.remove(piePanel);
 			this.remove(viewInstLabel);
+			//add new components
 			this.add(teamMembersLabel);
 			this.repaint();
 		}else if(e.getSource() == loadButton) {
+			//allows user to load information from a .csv file
+			
+			//remove old components
 			this.remove(addLabel);
 			this.remove(pane);
 			this.remove(teamMembersLabel);
@@ -325,11 +333,14 @@ public class OptionsPanel extends JPanel implements ActionListener {
 			this.remove(pieChartButton);
 			this.remove(piePanel);
 			this.remove(viewInstLabel);
+			//add new components
 			this.add(loadFileButton);
 			this.add(loadinstLabel);
 			this.repaint();
 		}else if(e.getSource() == addButton) {
 			//displays area for user to enter and add information
+			
+			//remove old components
 			this.remove(teamMembersLabel);
 			this.remove(pane);
 			this.remove(loadFileButton);
@@ -345,6 +356,7 @@ public class OptionsPanel extends JPanel implements ActionListener {
 			this.remove(pieChartButton);
 			this.remove(piePanel);
 			this.remove(viewInstLabel);
+			//add new components
 			this.add(addLabel);
 			this.add(addDate);
 			this.add(addID);
@@ -355,6 +367,9 @@ public class OptionsPanel extends JPanel implements ActionListener {
 			this.add(addInfoButton);
 			this.repaint();
 		}else if(e.getSource() == saveButton) {
+			//allows user to save information to a .csv file
+			
+			//remove old components
 			this.remove(addLabel);
 			this.remove(pane);
 			this.remove(teamMembersLabel);
@@ -376,6 +391,7 @@ public class OptionsPanel extends JPanel implements ActionListener {
 			this.remove(pieChartButton);
 			this.remove(piePanel);
 			this.remove(viewInstLabel);
+			//add new components
 			this.add(saveFileButton);
 			this.add(saveinstLabel);
 			this.add(savedLabel);
@@ -383,6 +399,8 @@ public class OptionsPanel extends JPanel implements ActionListener {
 			this.repaint();
 		}else if(e.getSource() == viewButton) {
 			// show table and pie chart
+			
+			//remove old components
 			this.remove(addLabel);
 			this.remove(pane);
 			this.remove(teamMembersLabel);
@@ -404,20 +422,26 @@ public class OptionsPanel extends JPanel implements ActionListener {
 			this.remove(savedLabel);
 			this.remove(piePanel);
 			this.remove(chartPanel);
+			//add new components
 			this.add(barChartButton);
 			this.add(pieChartButton);
 			viewInstLabel.setText("");
 			this.add(viewInstLabel);
+			//gets data for bar chart
 			for(int i = 0; i < types.size(); i++) {
 				dcd.setValue(types.get(i).getCount(),types.get(i).getType() , "");
 			}
+			//gets data for pie chart
 			for(int i = 0; i < locations.size(); i++) {
 				dpd.setValue(locations.get(i).getLocation() ,new Integer(locations.get(i).getCount()));
 			}
 			this.repaint();
 		}else if(e.getSource() == addInfoButton) {
 			//adds new info to table
+			
+			//add new components
 			this.add(infoAddedLabel);
+			//checks if any text fields are empty
 			if(addID.getText().compareTo("") == 0) {
 				addID.setText("");
 				addLast.setText("");
@@ -473,17 +497,22 @@ public class OptionsPanel extends JPanel implements ActionListener {
 				infoAddedLabel.setText("Information Not Added to Table!");
 				this.repaint();
 			}else {
+				//if all text fields are filled out correctly
 				int repeat = 0;
 				for(int i = 0; i < vaccines.size(); i++) {
+					// if there is a repeat id
 					if(vaccines.get(i).getID().compareTo(addID.getText()) == 0){
+						//saves old information
 						String oldLocation = (String)table.getModel().getValueAt(i, 5);
 						String oldType = (String)table.getModel().getValueAt(i, 3) ;
+						//updates table
 						table.getModel().setValueAt(addID.getText(), i, 0);
 						table.getModel().setValueAt(addLast.getText(), i, 1);
 						table.getModel().setValueAt(addFirst.getText(), i, 2);
 						table.getModel().setValueAt(addType.getText(), i, 3);
 						table.getModel().setValueAt(addDate.getText(), i, 4);
 						table.getModel().setValueAt(addLocation.getText(), i, 5);
+						//updates vaccines arraylist
 						vaccines.get(i).setID(addID.getText());
 						vaccines.get(i).setLast(addLast.getText());
 						vaccines.get(i).setFirst(addFirst.getText());
@@ -492,6 +521,7 @@ public class OptionsPanel extends JPanel implements ActionListener {
 						vaccines.get(i).setLocation(addLocation.getText());
 						int typeRepeat = 0;
 						for(int q = 0; q < types.size(); q++) {
+							//checks if type has changed
 							if(types.get(q).getType().compareTo(addType.getText()) == 0) {
 								types.get(q).incrementCount();
 								typeRepeat = 1;
@@ -500,6 +530,7 @@ public class OptionsPanel extends JPanel implements ActionListener {
 								types.get(q).decrementCount();
 							}
 						}
+						//if no repeat type occurs, decrements count for type
 						if(typeRepeat == 0) {
 							VaccineType newType = new VaccineType(addType.getText());
 							newType.incrementCount();
@@ -507,6 +538,7 @@ public class OptionsPanel extends JPanel implements ActionListener {
 						}
 						int locRepeat = 0;
 						for(int q = 0; q < locations.size(); q++) {
+							//checks if location has changed
 							if(locations.get(q).getLocation().compareTo(addLocation.getText()) == 0) {
 								locations.get(q).incrementCount();
 								locRepeat = 1;
@@ -515,6 +547,7 @@ public class OptionsPanel extends JPanel implements ActionListener {
 								locations.get(q).decrementCount();
 							}
 						}
+						//if no repeat location occurs, decrements count for location
 						if(locRepeat == 0) {
 							VaccineLocation newLoc = new VaccineLocation(addLocation.getText());
 							newLoc.incrementCount();
@@ -524,6 +557,7 @@ public class OptionsPanel extends JPanel implements ActionListener {
 						repeat = 1;
 					}
 				}
+				//if no repeat occurs then new info is added
 				if(repeat == 0) {
 					rows[0] = addID.getText();
 					rows[1] = addLast.getText();
@@ -560,6 +594,7 @@ public class OptionsPanel extends JPanel implements ActionListener {
 						locations.add(newLoc);
 					}
 				}
+				//resets text fields
 				addID.setText("");
 				addLast.setText("");
 				addFirst.setText("");
@@ -569,6 +604,9 @@ public class OptionsPanel extends JPanel implements ActionListener {
 				this.repaint();
 			}
 		}else if(e.getSource() == loadFileButton) {
+			//allows the user to select a file to load
+			
+			//remove old components
 			this.remove(loadedLabel);
 			this.remove(loadErrorLabel);
 			JFileChooser fileChooser = new JFileChooser();
@@ -582,7 +620,6 @@ public class OptionsPanel extends JPanel implements ActionListener {
 					this.repaint();
 					String line = "";
 					int i = 0;
-					//model.setRowCount(0); // clears table
 					try {
 						//adds data to the table
 						BufferedReader br = new BufferedReader(new FileReader(fileChooser.getSelectedFile().getAbsolutePath()));
@@ -592,6 +629,58 @@ public class OptionsPanel extends JPanel implements ActionListener {
 								String[] values = line.split(",");
 								for(int j = 0; j < vaccines.size(); j++) {
 									if(vaccines.get(j).getID().compareTo(values[0]) == 0){
+										//saves old information
+										String oldLocation = (String)table.getModel().getValueAt(j, 5);
+										String oldType = (String)table.getModel().getValueAt(j, 3) ;
+										//updates table
+										table.getModel().setValueAt(values[0], j, 0);
+										table.getModel().setValueAt(values[1], j, 1);
+										table.getModel().setValueAt(values[2], j, 2);
+										table.getModel().setValueAt(values[3], j, 3);
+										table.getModel().setValueAt(values[4], j, 4);
+										table.getModel().setValueAt(values[5], j, 5);
+										//updates vaccines arraylist
+										vaccines.get(j).setID(values[0]);
+										vaccines.get(j).setLast(values[1]);
+										vaccines.get(j).setFirst(values[2]);
+										vaccines.get(j).setType(values[3]);
+										vaccines.get(j).setDate(values[4]);
+										vaccines.get(j).setLocation(values[5]);
+										int typeRepeat = 0;
+										for(int q = 0; q < types.size(); q++) {
+											//checks if type has changed
+											if(types.get(q).getType().compareTo(values[3]) == 0) {
+												types.get(q).incrementCount();
+												typeRepeat = 1;
+											}
+											if(types.get(q).getType().compareTo(oldType) == 0) {
+												types.get(q).decrementCount();
+											}
+										}
+										//if no repeat type occurs, decrements count for type
+										if(typeRepeat == 0) {
+											VaccineType newType = new VaccineType(values[3]);
+											newType.incrementCount();
+											types.add(newType);
+										}
+										int locRepeat = 0;
+										for(int q = 0; q < locations.size(); q++) {
+											//checks if location has changed
+											if(locations.get(q).getLocation().compareTo(values[5]) == 0) {
+												locations.get(q).incrementCount();
+												locRepeat = 1;
+											}
+											if(locations.get(q).getLocation().compareTo(oldLocation) == 0) {
+												locations.get(q).decrementCount();
+											}
+										}
+										//if no repeat location occurs, decrements count for location
+										if(locRepeat == 0) {
+											VaccineLocation newLoc = new VaccineLocation(values[5]);
+											newLoc.incrementCount();
+											locations.add(newLoc);
+										}
+										//infoAddedLabel.setText("ID: " + addID.getText() +  " is Already in the Table! Info Overridden");
 										repeat = 1;
 									}
 								}
@@ -640,10 +729,12 @@ public class OptionsPanel extends JPanel implements ActionListener {
 						e3.printStackTrace();
 					}
 				}else {
+					//error message
 					this.add(loadErrorLabel);
 				}
 			}
 		}else if(e.getSource() == saveFileButton) {
+			//allows user to select a file to save to
 			savedLabel.setText("");
 			this.repaint();
 			JFileChooser fileSaver = new JFileChooser();
@@ -672,17 +763,27 @@ public class OptionsPanel extends JPanel implements ActionListener {
 				}
 			}
 		}else if(e.getSource() == barChartButton) {
+			//shows the bar chart info
+			
+			//remove old components
 			this.remove(piePanel);
 			viewInstLabel.setText("Hover over bars with mouse for more information!");
+			//add new components
 			this.add(chartPanel);
 			this.repaint();
 		}else if(e.getSource() == pieChartButton) {
+			//shows the pie chart info
+			
+			//remove old components
 			this.remove(chartPanel);
 			viewInstLabel.setText("Hover over pie slices with mouse for more information!");
+			//add new components
 			this.add(piePanel);
 			this.repaint();
 		}else {
 			//show table
+			
+			//remove old components
 			this.remove(addLabel);
 			this.remove(loadedLabel);
 			this.remove(pane);
@@ -708,6 +809,7 @@ public class OptionsPanel extends JPanel implements ActionListener {
 			this.remove(pieChartButton);
 			this.remove(piePanel);
 			this.remove(viewInstLabel);
+			//add new components
 			this.add(pane);
 			this.repaint();
 		}
